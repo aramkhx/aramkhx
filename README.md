@@ -1,16 +1,16 @@
-## Hi there 👋
+```bash
+aramkhx@github:~$ neofetch
 
-<!--
-**aramkhx/aramkhx** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+⠀⠀⠀⠀⣿⡇⠀⢸⣿⡇⠀⠀⠀⠀    aramkhx@node-01
+⠸⠿⣿⣿⣿⡿⠿⠿⣿⣿⣿⣶⣄⠀    ---------------
+⠀⠀⢸⣿⣿⡇⠀⠀⠀⠈⣿⣿⣿⠀    > Building the decentralized future
+⠀⠀⢸⣿⣿⡇⠀⠀⢀⣠⣿⣿⠟⠀    > Turning coffee into consensus
+⠀⠀⢸⣿⣿⡿⠿⠿⠿⣿⣿⣥⣄⠀    > Mainnet ready since 20XX
+⠀⠀⢸⣿⣿⡇⠀⠀⠀⠀⢻⣿⣿⣧    
+⠀⠀⢸⣿⣿⡇⠀⠀⠀⠀⣼⣿⣿⣿    [!] Warning: High volatility in repo
+⢰⣶⣿⣿⣿⣷⣶⣶⣾⣿⣿⠿⠛⠁    [?] Run `contact.exe` for collabs
+⠀⠀⠀⠀⣿⡇⠀⢸⣿⡇⠀⠀⠀⠀
 
-Here are some ideas to get you started:
+aramkhx@github:~$ npm run world-domination
+```
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
