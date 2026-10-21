@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="118" height="48" viewBox="0 0 118 48" role="img" aria-label="Email">
+<title>Email</title>
+<style>
+text{font-family:'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;}
+.m{font-family:'JetBrains Mono','Fira Code','SF Mono','SFMono-Regular',Menlo,Consolas,'Liberation Mono',monospace;}
+
+.au1{animation:au1 18s ease-in-out infinite alternate}
+.au2{animation:au2 23s ease-in-out infinite alternate}
+@keyframes au1{to{transform:translate(70px,26px)}}
+@keyframes au2{to{transform:translate(-90px,-24px)}}
+.pulse{animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+
+.sheen{animation:sheen 6s ease-in-out 1.6s infinite}
+@keyframes sheen{0%,65%{transform:translateX(0) skewX(-20deg)}100%{transform:translateX(258px) skewX(-20deg)}}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;}}
+</style>
+<defs>
+  <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A8ECFF" stop-opacity=".9"/><stop offset="1" stop-color="#A8ECFF" stop-opacity=".15"/></linearGradient>
+  <radialGradient id="glow" cx="0" cy=".5" r=".9"><stop offset="0" stop-color="#A8ECFF" stop-opacity=".22"/><stop offset="1" stop-color="#A8ECFF" stop-opacity="0"/></radialGradient>
+  <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A8ECFF" stop-opacity=".28"/><stop offset="1" stop-color="#A8ECFF" stop-opacity=".06"/></linearGradient>
+  <linearGradient id="sh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <clipPath id="c"><rect x=".75" y=".75" width="116.5" height="46.5" rx="13"/></clipPath>
+</defs>
+<rect x=".75" y=".75" width="116.5" height="46.5" rx="13" fill="#070C18"/>
+<rect x=".75" y=".75" width="116.5" height="46.5" rx="13" fill="url(#glow)"/>
+<g clip-path="url(#c)"><rect class="sheen" x="-90" y="-10" width="46" height="68" fill="url(#sh)" transform="skewX(-20)"/></g>
+<rect x=".75" y=".75" width="116.5" height="46.5" rx="13" fill="none" stroke="url(#edge)" stroke-width="1.5"/>
+<rect x="8" y="8" width="32" height="32" rx="9" fill="url(#tile)" stroke="#A8ECFF" stroke-opacity=".3"/>
+<rect x="15.5" y="17" width="17" height="13" rx="2.5" fill="none" stroke="#A8ECFF" stroke-width="1.8"/><polyline points="16.5,18.5 24,24.5 31.5,18.5" fill="none" stroke="#A8ECFF" stroke-width="1.8" stroke-linejoin="round"/>
+<text x="52" y="29" class="m" font-size="14" font-weight="600" fill="#E6EDF3">Email</text>
+
+</svg>

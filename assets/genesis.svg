@@ -1,0 +1,252 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1000" height="540" viewBox="0 0 1000 540" role="img" aria-label="Genesis block: about Aram Khachatryan">
+<title>Genesis block: about Aram Khachatryan</title>
+<style>
+text{font-family:'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;}
+.m{font-family:'JetBrains Mono','Fira Code','SF Mono','SFMono-Regular',Menlo,Consolas,'Liberation Mono',monospace;}
+
+.au1{animation:au1 18s ease-in-out infinite alternate}
+.au2{animation:au2 23s ease-in-out infinite alternate}
+@keyframes au1{to{transform:translate(70px,26px)}}
+@keyframes au2{to{transform:translate(-90px,-24px)}}
+.pulse{animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+
+.tx{animation:tx .6s ease-out both}
+@keyframes tx{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+.blink{animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.np{transform-box:fill-box;transform-origin:center;animation:np 3.6s ease-out infinite}
+@keyframes np{0%{transform:scale(1);opacity:.9}35%,100%{transform:scale(2.6);opacity:0}}
+.sweep{animation:sweep 9s ease-in-out 1s infinite}
+@keyframes sweep{0%,55%{transform:translateX(0) skewX(-22deg)}100%{transform:translateX(1400px) skewX(-22deg)}}
+.holo{animation:holo 5s ease-in-out infinite}
+@keyframes holo{0%,60%{transform:translateX(0) skewX(-20deg)}100%{transform:translateX(120px) skewX(-20deg)}}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;}}
+</style>
+<defs>
+  <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2F7BFF"/><stop offset=".55" stop-color="#00D4FF"/><stop offset="1" stop-color="#A8ECFF"/></linearGradient>
+  <radialGradient id="au1" cx=".2" cy="0" r=".6"><stop offset="0" stop-color="#2F7BFF" stop-opacity=".26"/><stop offset="1" stop-color="#2F7BFF" stop-opacity="0"/></radialGradient>
+  <radialGradient id="au2" cx=".9" cy="1" r=".55"><stop offset="0" stop-color="#00D4FF" stop-opacity=".13"/><stop offset="1" stop-color="#00D4FF" stop-opacity="0"/></radialGradient>
+  <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset=".45" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#00D4FF" stop-opacity=".22"/></linearGradient>
+  <linearGradient id="sep" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".2" stop-color="#fff" stop-opacity=".09"/><stop offset=".8" stop-color="#fff" stop-opacity=".09"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".9" fill="#fff" fill-opacity=".04"/></pattern>
+  <clipPath id="frame"><rect width="1000" height="540" rx="16"/></clipPath>
+</defs>
+<g clip-path="url(#frame)">
+  <rect width="1000" height="540" fill="#070C18"/>
+  <rect class="au1" x="-120" y="-80" width="1240" height="700" fill="url(#au1)"/>
+  <rect class="au2" x="-120" y="-80" width="1240" height="700" fill="url(#au2)"/>
+  <rect width="1000" height="540" fill="url(#dots)"/>
+</g>
+<rect x="28" y="24" width="36" height="22" rx="11" fill="#00D4FF" fill-opacity=".1" stroke="#00D4FF" stroke-opacity=".4"/>
+<text x="46" y="39" class="m" font-size="11" font-weight="700" text-anchor="middle" fill="#00D4FF">01</text>
+<text x="76" y="40" class="m" font-size="13" letter-spacing="3" fill="#E6EDF3">GENESIS BLOCK</text>
+<text x="972" y="40" class="m" font-size="12" text-anchor="end" fill="#4D5B78">aramscan · personal block explorer</text>
+<rect x="28" y="60" width="944" height="1" fill="url(#sep)"/>
+
+<defs>
+  <linearGradient id="shine" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="160" y2="0">
+    <stop offset="0" stop-color="#8A97B0"/><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="#8A97B0"/>
+    <animateTransform attributeName="gradientTransform" type="translate" values="100;540;540" keyTimes="0;.6;1" dur="4s" repeatCount="indefinite"/>
+  </linearGradient>
+  <linearGradient id="spine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00D4FF" stop-opacity=".7"/><stop offset="1" stop-color="#2F7BFF" stop-opacity=".1"/></linearGradient>
+  <linearGradient id="holoG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <linearGradient id="sweepG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#A8ECFF" stop-opacity="0"/><stop offset=".5" stop-color="#A8ECFF" stop-opacity=".07"/><stop offset="1" stop-color="#A8ECFF" stop-opacity="0"/></linearGradient>
+  <clipPath id="panels"><rect x="28" y="154" width="462" height="360" rx="12"/><rect x="510" y="154" width="462" height="360" rx="12"/></clipPath>
+  <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="8"/></filter>
+</defs>
+<clipPath id="blk"><rect x="28" y="80" width="48" height="48" rx="11"/></clipPath>
+<rect x="24" y="76" width="56" height="56" rx="14" fill="#00D4FF" opacity=".35" filter="url(#soft)"/>
+<g clip-path="url(#blk)">
+<rect x="28.0" y="80.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="70.0" y="80.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="34.0" y="80.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="64.0" y="80.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="40.0" y="80.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="58.0" y="80.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="46.0" y="80.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="52.0" y="80.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="28.0" y="86.0" width="6.3" height="6.3" fill="#A8ECFF"/>
+<rect x="70.0" y="86.0" width="6.3" height="6.3" fill="#A8ECFF"/>
+<rect x="34.0" y="86.0" width="6.3" height="6.3" fill="#00D4FF"/>
+<rect x="64.0" y="86.0" width="6.3" height="6.3" fill="#00D4FF"/>
+<rect x="40.0" y="86.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="58.0" y="86.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="46.0" y="86.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="52.0" y="86.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="28.0" y="92.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="70.0" y="92.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="34.0" y="92.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="64.0" y="92.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="40.0" y="92.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="58.0" y="92.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="46.0" y="92.0" width="6.3" height="6.3" fill="#00D4FF"/>
+<rect x="52.0" y="92.0" width="6.3" height="6.3" fill="#00D4FF"/>
+<rect x="28.0" y="98.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="70.0" y="98.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="34.0" y="98.0" width="6.3" height="6.3" fill="#00D4FF"/>
+<rect x="64.0" y="98.0" width="6.3" height="6.3" fill="#00D4FF"/>
+<rect x="40.0" y="98.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="58.0" y="98.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="46.0" y="98.0" width="6.3" height="6.3" fill="#00D4FF"/>
+<rect x="52.0" y="98.0" width="6.3" height="6.3" fill="#00D4FF"/>
+<rect x="28.0" y="104.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="70.0" y="104.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="34.0" y="104.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="64.0" y="104.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="40.0" y="104.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="58.0" y="104.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="46.0" y="104.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="52.0" y="104.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="28.0" y="110.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="70.0" y="110.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="34.0" y="110.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="64.0" y="110.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="40.0" y="110.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="58.0" y="110.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="46.0" y="110.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="52.0" y="110.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="28.0" y="116.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="70.0" y="116.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="34.0" y="116.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="64.0" y="116.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="40.0" y="116.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="58.0" y="116.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="46.0" y="116.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="52.0" y="116.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="28.0" y="122.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="70.0" y="122.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="34.0" y="122.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="64.0" y="122.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="40.0" y="122.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="58.0" y="122.0" width="6.3" height="6.3" fill="#0C1426"/>
+<rect x="46.0" y="122.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect x="52.0" y="122.0" width="6.3" height="6.3" fill="#2F7BFF"/>
+<rect class="holo" x="-2" y="70" width="22" height="68" fill="url(#holoG)" transform="skewX(-20)"/>
+</g>
+<rect x="28.5" y="80.5" width="47" height="47" rx="10.5" fill="none" stroke="#A8ECFF" stroke-opacity=".5"/>
+<circle cx="74" cy="126" r="8" fill="#070C18"/><circle cx="74" cy="126" r="6.2" fill="#00D4FF"/><path d="M71,126 L73,128 L77,123.5" fill="none" stroke="#070C18" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="92" y="101" font-size="15" fill="#8A97B0">Block</text>
+<text x="138" y="102" class="m" font-size="26" font-weight="700" fill="#E6EDF3">#108998795</text>
+<rect x="308" y="81" width="104" height="26" rx="13" fill="#00D4FF" fill-opacity=".1" stroke="#00D4FF" stroke-opacity=".4"/>
+<circle class="pulse" cx="324" cy="94" r="3.5" fill="#00D4FF"/>
+<text x="334" y="99" class="m" font-size="12" fill="#00D4FF">Finalized</text>
+<text x="92" y="126" font-size="13.5" fill="#8A97B0">Genesis mined <tspan fill="#E6EDF3">Jul 09, 2022</tspan> · validator <tspan fill="#00D4FF">aramk.eth</tspan></text>
+<rect x="640" y="80" width="332" height="36" rx="10" fill="#0C1426" fill-opacity=".72"/><rect x="640.5" y="80.5" width="331" height="35" rx="9.5" fill="none" stroke="url(#edge)"/>
+<circle cx="660" cy="97" r="6" fill="none" stroke="#8A97B0" stroke-width="1.6"/><path d="M664.5,101.5 L669,106" stroke="#8A97B0" stroke-width="1.6" stroke-linecap="round"/>
+<text x="680" y="103" class="m" font-size="13" fill="#E6EDF3">aramk.eth</text>
+<rect class="blink" x="752" y="90" width="2" height="16" fill="#00D4FF"/>
+<rect x="902" y="88" width="62" height="20" rx="6" fill="#fff" fill-opacity=".05"/>
+<text x="933" y="102" class="m" font-size="11" text-anchor="middle" fill="#4D5B78">ENTER ↵</text>
+
+<rect x="28" y="154" width="462" height="360" rx="12" fill="#0C1426" fill-opacity=".72"/><rect x="28.5" y="154.5" width="461" height="359" rx="11.5" fill="none" stroke="url(#edge)"/>
+<text x="48" y="184" font-size="15" font-weight="700" fill="#E6EDF3">Overview</text>
+<g transform="translate(48 205)" fill="none" stroke="#7DB9FF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1 L13 4 L13 10 L7 13 L1 10 L1 4 Z M1 4 L7 7 L13 4 M7 7 V13"/></g>
+<text x="72" y="216" class="m" font-size="12.5" fill="#8A97B0">Block Height</text>
+<text x="196" y="216" font-size="14.5" fill="#E6EDF3">108998795<tspan class="m" font-size="11" fill="#4D5B78" dx="10">github uid</tspan></text>
+<rect x="48" y="230" width="422" height="1" fill="url(#sep)"/>
+<g transform="translate(48 239)" fill="none" stroke="#7DB9FF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="6"/><path d="M4.2 7.2 L6.2 9.2 L9.8 5.2"/></g>
+<text x="72" y="250" class="m" font-size="12.5" fill="#8A97B0">Status</text>
+<text x="196" y="250" font-size="14.5" fill="#00D4FF">Finalized</text>
+<rect x="48" y="264" width="422" height="1" fill="url(#sep)"/>
+<g transform="translate(48 273)" fill="none" stroke="#7DB9FF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="4.6" r="2.8"/><path d="M1.8 13 C2.6 9.4 11.4 9.4 12.2 13"/></g>
+<text x="72" y="284" class="m" font-size="12.5" fill="#8A97B0">Validator</text>
+<text x="196" y="284" font-size="14.5" fill="#E6EDF3">Aram Khachatryan</text>
+<rect x="48" y="298" width="422" height="1" fill="url(#sep)"/>
+<g transform="translate(48 307)" fill="none" stroke="#7DB9FF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1 L12 7 L7 13 L2 7 Z M2 7 H12"/></g>
+<text x="72" y="318" class="m" font-size="12.5" fill="#8A97B0">ENS Name</text>
+<text x="196" y="318" font-size="14.5" fill="#00D4FF">aramk.eth</text>
+<rect x="48" y="332" width="422" height="1" fill="url(#sep)"/>
+<g transform="translate(48 341)" fill="none" stroke="#7DB9FF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13 C7 13 2.5 8.6 2.5 5.4 A4.5 4.5 0 0 1 11.5 5.4 C11.5 8.6 7 13 7 13 Z"/><circle cx="7" cy="5.4" r="1.6"/></g>
+<text x="72" y="352" class="m" font-size="12.5" fill="#8A97B0">Location</text>
+<text x="196" y="352" font-size="14.5" fill="#E6EDF3">Yerevan, Armenia · 40.18°N 44.51°E</text>
+<rect x="48" y="366" width="422" height="1" fill="url(#sep)"/>
+<g transform="translate(48 375)" fill="none" stroke="#7DB9FF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="4" width="11" height="8.5" rx="1.8"/><path d="M5 4 V2.3 H9 V4 M1.5 7.8 H12.5"/></g>
+<text x="72" y="386" class="m" font-size="12.5" fill="#8A97B0">Role</text>
+<text x="196" y="386" font-size="14.5" fill="#E6EDF3">Software &amp; Cybersecurity Engineer</text>
+<rect x="48" y="400" width="422" height="1" fill="url(#sep)"/>
+<g transform="translate(48 409)" fill="none" stroke="#7DB9FF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 13 V1.5 M2.5 2 H11 L9 5 L11 8 H2.5"/></g>
+<text x="72" y="420" class="m" font-size="12.5" fill="#8A97B0">Ideology</text>
+<text x="196" y="420" font-size="14.5" fill="#F5C451">Li₿ertarian</text>
+<rect x="48" y="434" width="422" height="1" fill="url(#sep)"/>
+<g transform="translate(48 443)" fill="none" stroke="#7DB9FF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5 H10 V9 A3.5 3.5 0 0 1 6.5 12.5 H5.5 A3.5 3.5 0 0 1 2 9 Z M10 6.5 H11 A1.6 1.6 0 0 1 11 9.7 H10 M4.5 1.5 V3.5 M7.5 1.5 V3.5"/></g>
+<text x="72" y="454" class="m" font-size="12.5" fill="#8A97B0">Gas Used</text>
+<rect x="196" y="445" width="140" height="8" rx="4" fill="#fff" fill-opacity=".07"/>
+<rect x="196" y="445" width="140" height="8" rx="4" fill="url(#grad)"><animate attributeName="width" values="0;0;140" keyTimes="0;0.15;1" dur="2.6s" fill="freeze" calcMode="spline" keySplines="0 0 1 1;.25 .1 .25 1"/></rect>
+<text x="346" y="454" class="m" font-size="13" fill="#E6EDF3">∞ coffee <tspan fill="#4D5B78">(100%)</tspan></text>
+<rect x="48" y="468" width="422" height="1" fill="url(#sep)"/>
+<g transform="translate(48 477)" fill="none" stroke="#7DB9FF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 1.5 L4 12.5 M10 1.5 L9 12.5 M1.5 5 H12.5 M1.5 9 H12.5"/></g>
+<text x="72" y="488" class="m" font-size="12.5" fill="#8A97B0">Block Hash</text>
+<text x="196" y="488" class="m" font-size="13" fill="url(#shine)">0x6172616d6b2e657468…</text>
+<rect x="510" y="154" width="462" height="360" rx="12" fill="#0C1426" fill-opacity=".72"/><rect x="510.5" y="154.5" width="461" height="359" rx="11.5" fill="none" stroke="url(#edge)"/>
+<text x="530" y="184" font-size="15" font-weight="700" fill="#E6EDF3">Transactions</text>
+<rect x="632" y="170" width="58" height="20" rx="10" fill="#fff" fill-opacity=".06"/><text x="661" y="184" class="m" font-size="11" text-anchor="middle" fill="#8A97B0">6 txns</text>
+<text x="952" y="184" class="m" font-size="11" text-anchor="end" fill="#4D5B78">method · hash · status</text>
+<rect x="540" y="214" width="2" height="250" rx="1" fill="url(#spine)"/>
+<circle r="3" fill="#A8ECFF" filter="url(#glow)"><animateMotion dur="3.6s" repeatCount="indefinite" path="M541,214 V464"/></circle>
+<g class="tx" style="animation-delay:0.40s">
+<circle class="np" style="animation-delay:-3.60s" cx="541" cy="214" r="6.5" fill="none" stroke="#2F7BFF" stroke-width="1.2"/>
+<circle cx="541" cy="214" r="6.5" fill="#070C18" stroke="#2F7BFF" stroke-width="1.6"/><circle cx="541" cy="214" r="2.4" fill="#2F7BFF"/>
+<rect x="560" y="204" width="66" height="20" rx="5" fill="#2F7BFF" fill-opacity=".13" stroke="#2F7BFF" stroke-opacity=".45"/>
+<text x="593" y="218" class="m" font-size="12" text-anchor="middle" fill="#2F7BFF">prove()</text>
+<text x="636" y="218" class="m" font-size="12" fill="#4D5B78">0x0fe6…8fd2</text>
+<text x="952" y="218" class="m" font-size="11" text-anchor="end" fill="#00D4FF"><tspan font-family="'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif">✓</tspan> success</text>
+<text x="560" y="242" font-size="14" fill="#E6EDF3">Groth16 circuits in Circom → Solidity verifiers</text>
+</g>
+<g class="tx" style="animation-delay:0.58s">
+<circle class="np" style="animation-delay:-2.88s" cx="541" cy="264" r="6.5" fill="none" stroke="#F5C451" stroke-width="1.2"/>
+<circle cx="541" cy="264" r="6.5" fill="#070C18" stroke="#F5C451" stroke-width="1.6"/><circle cx="541" cy="264" r="2.4" fill="#F5C451"/>
+<rect x="560" y="254" width="88" height="20" rx="5" fill="#F5C451" fill-opacity=".13" stroke="#F5C451" stroke-opacity=".45"/>
+<text x="604" y="268" class="m" font-size="12" text-anchor="middle" fill="#F5C451">transmit()</text>
+<text x="658" y="268" class="m" font-size="12" fill="#4D5B78">0x8dbb…4d62</text>
+<text x="952" y="268" class="m" font-size="11" text-anchor="end" fill="#00D4FF"><tspan font-family="'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif">✓</tspan> success</text>
+<text x="560" y="292" font-size="14" fill="#E6EDF3">210-byte ZK alert packets over LoRa radio</text>
+</g>
+<g class="tx" style="animation-delay:0.76s">
+<circle class="np" style="animation-delay:-2.16s" cx="541" cy="314" r="6.5" fill="none" stroke="#00D4FF" stroke-width="1.2"/>
+<circle cx="541" cy="314" r="6.5" fill="#070C18" stroke="#00D4FF" stroke-width="1.6"/><circle cx="541" cy="314" r="2.4" fill="#00D4FF"/>
+<rect x="560" y="304" width="66" height="20" rx="5" fill="#00D4FF" fill-opacity=".13" stroke="#00D4FF" stroke-opacity=".45"/>
+<text x="593" y="318" class="m" font-size="12" text-anchor="middle" fill="#00D4FF">build()</text>
+<text x="636" y="318" class="m" font-size="12" fill="#4D5B78">0xe30f…482b</text>
+<text x="952" y="318" class="m" font-size="11" text-anchor="end" fill="#00D4FF"><tspan font-family="'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif">✓</tspan> success</text>
+<text x="560" y="342" font-size="14" fill="#E6EDF3">On-chain programs in Rust &amp; Anchor: escrow, vault</text>
+</g>
+<g class="tx" style="animation-delay:0.94s">
+<circle class="np" style="animation-delay:-1.44s" cx="541" cy="364" r="6.5" fill="none" stroke="#A8ECFF" stroke-width="1.2"/>
+<circle cx="541" cy="364" r="6.5" fill="#070C18" stroke="#A8ECFF" stroke-width="1.6"/><circle cx="541" cy="364" r="2.4" fill="#A8ECFF"/>
+<rect x="560" y="354" width="74" height="20" rx="5" fill="#A8ECFF" fill-opacity=".13" stroke="#A8ECFF" stroke-opacity=".45"/>
+<text x="597" y="368" class="m" font-size="12" text-anchor="middle" fill="#A8ECFF">secure()</text>
+<text x="644" y="368" class="m" font-size="12" fill="#4D5B78">0x97d0…a410</text>
+<text x="952" y="368" class="m" font-size="11" text-anchor="end" fill="#00D4FF"><tspan font-family="'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif">✓</tspan> success</text>
+<text x="560" y="392" font-size="14" fill="#E6EDF3">TLS · RSA · AES-GCM · SHA-256 on Nordic nRF</text>
+</g>
+<g class="tx" style="animation-delay:1.12s">
+<circle class="np" style="animation-delay:-0.72s" cx="541" cy="414" r="6.5" fill="none" stroke="#7DB9FF" stroke-width="1.2"/>
+<circle cx="541" cy="414" r="6.5" fill="#070C18" stroke="#7DB9FF" stroke-width="1.6"/><circle cx="541" cy="414" r="2.4" fill="#7DB9FF"/>
+<rect x="560" y="404" width="95" height="20" rx="5" fill="#7DB9FF" fill-opacity=".13" stroke="#7DB9FF" stroke-opacity=".45"/>
+<text x="608" y="418" class="m" font-size="12" text-anchor="middle" fill="#7DB9FF">translate()</text>
+<text x="665" y="418" class="m" font-size="12" fill="#4D5B78">0x1956…7230</text>
+<text x="952" y="418" class="m" font-size="11" text-anchor="end" fill="#00D4FF"><tspan font-family="'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif">✓</tspan> success</text>
+<text x="560" y="442" font-size="14" fill="#E6EDF3">Web3 vocabulary → Armenian (Հայերեն)</text>
+</g>
+<g class="tx" style="animation-delay:1.30s">
+<circle class="np" style="animation-delay:0.00s" cx="541" cy="464" r="6.5" fill="none" stroke="#8A97B0" stroke-width="1.2"/>
+<circle cx="541" cy="464" r="6.5" fill="#070C18" stroke="#8A97B0" stroke-width="1.6"/><circle cx="541" cy="464" r="2.4" fill="#8A97B0"/>
+<rect x="560" y="454" width="81" height="20" rx="5" fill="#8A97B0" fill-opacity=".13" stroke="#8A97B0" stroke-opacity=".45"/>
+<text x="600" y="468" class="m" font-size="12" text-anchor="middle" fill="#8A97B0">publish()</text>
+<text x="651" y="468" class="m" font-size="12" fill="#4D5B78">0xb376…d07f</text>
+<text x="952" y="468" class="m" font-size="11" text-anchor="end" fill="#00D4FF"><tspan font-family="'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif">✓</tspan> success</text>
+<text x="560" y="492" font-size="14" fill="#E6EDF3">Writing at aramk.eth.limo, in EN &amp; Հայերեն</text>
+</g>
+<g clip-path="url(#panels)"><rect class="sweep" x="-260" y="140" width="150" height="400" fill="url(#sweepG)" transform="skewX(-22)"/></g>
+<rect x="0.75" y="0.75" width="998.5" height="538.5" rx="15.25" fill="none" stroke="url(#edge)" stroke-width="1.2"/>
+<rect x="0.75" y="0.75" width="998.5" height="538.5" rx="15.25" fill="none" stroke="#00D4FF" stroke-width="5" stroke-opacity="0.08" stroke-linecap="round" stroke-dasharray="240 2807.8" stroke-dashoffset="3047.8"><animate attributeName="stroke-dashoffset" from="3047.8" to="0.0" dur="11s" begin="-0s" repeatCount="indefinite"/></rect>
+<rect x="0.75" y="0.75" width="998.5" height="538.5" rx="15.25" fill="none" stroke="#00D4FF" stroke-width="2.4" stroke-opacity="0.32" stroke-linecap="round" stroke-dasharray="130 2917.8" stroke-dashoffset="2937.8"><animate attributeName="stroke-dashoffset" from="2937.8" to="-110.0" dur="11s" begin="-0s" repeatCount="indefinite"/></rect>
+<rect x="0.75" y="0.75" width="998.5" height="538.5" rx="15.25" fill="none" stroke="#00D4FF" stroke-width="1.5" stroke-opacity="0.95" stroke-linecap="round" stroke-dasharray="46 3001.8" stroke-dashoffset="2853.8"><animate attributeName="stroke-dashoffset" from="2853.8" to="-194.0" dur="11s" begin="-0s" repeatCount="indefinite"/></rect>
+<rect x="0.75" y="0.75" width="998.5" height="538.5" rx="15.25" fill="none" stroke="#2F7BFF" stroke-width="5" stroke-opacity="0.08" stroke-linecap="round" stroke-dasharray="240 2807.8" stroke-dashoffset="3047.8"><animate attributeName="stroke-dashoffset" from="3047.8" to="0.0" dur="11s" begin="-5.5s" repeatCount="indefinite"/></rect>
+<rect x="0.75" y="0.75" width="998.5" height="538.5" rx="15.25" fill="none" stroke="#2F7BFF" stroke-width="2.4" stroke-opacity="0.32" stroke-linecap="round" stroke-dasharray="130 2917.8" stroke-dashoffset="2937.8"><animate attributeName="stroke-dashoffset" from="2937.8" to="-110.0" dur="11s" begin="-5.5s" repeatCount="indefinite"/></rect>
+<rect x="0.75" y="0.75" width="998.5" height="538.5" rx="15.25" fill="none" stroke="#2F7BFF" stroke-width="1.5" stroke-opacity="0.95" stroke-linecap="round" stroke-dasharray="46 3001.8" stroke-dashoffset="2853.8"><animate attributeName="stroke-dashoffset" from="2853.8" to="-194.0" dur="11s" begin="-5.5s" repeatCount="indefinite"/></rect>
+</svg>
