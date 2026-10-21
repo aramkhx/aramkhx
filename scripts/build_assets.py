@@ -24,6 +24,16 @@ LOCATION = "Yerevan, Armenia"
 ENS = "aramk.eth"
 UID = "108998795"  # GitHub user id, doubles as the genesis block height
 
+# Hashes are written with a real "×" so every visitor sees the 0× style coding fonts draw for "0x".
+HEX_PREFIX = "0×"
+
+
+def hex_digest(text, head, tail):
+    """A 32-byte (64 hex) digest of text, shortened the way block explorers do."""
+    h = hashlib.sha256(text.encode()).hexdigest()
+    return f"{HEX_PREFIX}{h[:head]}…{h[-tail:]}"
+
+
 # (icon, label, value, colour, note); colour None = shimmering hash, value None = gas bar
 OVERVIEW = [
     ("block", "Block Height", UID, INK, "github uid"),
@@ -34,7 +44,7 @@ OVERVIEW = [
     ("role", "Role", ROLE, INK, ""),
     ("flag", "Ideology", "Li₿ertarian", GOLD, ""),
     ("cup", "Gas Used", None, INK, ""),
-    ("hash", "Block Hash", "0x" + ENS.encode().hex() + "…", None, ""),
+    ("hash", "Block Hash", hex_digest(ENS, 14, 12), None, ""),
 ]
 
 TXS = [
@@ -51,11 +61,6 @@ BUTTONS = [
     ("btn-linkedin", "LinkedIn", CYAN, "in"),
     ("btn-mail", "Email", ICE, "mail"),
 ]
-
-
-def short_hash(text):
-    h = hashlib.sha256(text.encode()).hexdigest()
-    return f"0x{h[:4]}…{h[-4:]}"
 
 
 def mix(c1, c2, t):
@@ -467,7 +472,7 @@ def genesis():
                    f'<circle cx="{sx}" cy="{y + 14}" r="2.4" fill="{colour}"/>')
         out.append(f'<rect x="560" y="{y + 4}" width="{chip:.0f}" height="20" rx="5" fill="{colour}" fill-opacity=".13" stroke="{colour}" stroke-opacity=".45"/>')
         out.append(f'<text x="{560 + chip / 2:.0f}" y="{y + 18}" class="m" font-size="12" text-anchor="middle" fill="{colour}">{esc(method)}</text>')
-        out.append(f'<text x="{570 + chip:.0f}" y="{y + 18}" class="m" font-size="12" fill="{DIM}">{short_hash(desc)}</text>')
+        out.append(f'<text x="{570 + chip:.0f}" y="{y + 18}" class="m" font-size="12" fill="{DIM}">{hex_digest(desc, 4, 4)}</text>')
         out.append(f'<text x="952" y="{y + 18}" class="m" font-size="11" text-anchor="end" fill="{CYAN}">{CHECK} success</text>')
         out.append(f'<text x="560" y="{y + 42}" font-size="14" fill="{INK}">{esc(desc)}</text>')
         out.append("</g>")

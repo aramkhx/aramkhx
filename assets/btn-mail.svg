@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="118" height="48" viewBox="0 0 118 48" role="img" aria-label="Email">
 <title>Email</title>
 <style>
-text{font-family:'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;}
+text{font-family:'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0;}
 .m{font-family:'JetBrains Mono','Fira Code','SF Mono','SFMono-Regular',Menlo,Consolas,'Liberation Mono',monospace;}
 
 .au1{animation:au1 18s ease-in-out infinite alternate}

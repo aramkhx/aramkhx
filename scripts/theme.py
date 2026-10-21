@@ -48,7 +48,7 @@ def svg(width, height, title, body, css=""):
     return f"""<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="{esc(title)}">
 <title>{esc(title)}</title>
 <style>
-text{{font-family:{SANS};}}
+text{{font-family:{SANS};font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0;}}
 .m{{font-family:{MONO};}}
 {BASE_CSS}
 {css}
