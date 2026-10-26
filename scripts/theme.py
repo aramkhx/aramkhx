@@ -19,11 +19,31 @@ MONO = "'JetBrains Mono','Fira Code','SF Mono','SFMono-Regular',Menlo,Consolas,'
 SANS = "'Inter','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif"
 
 # Electric blue -> cyan -> ice gradient used across every card.
-GRAD_STOPS = (
-    f'<stop offset="0" stop-color="{BLUE}"/>'
-    f'<stop offset=".55" stop-color="{CYAN}"/>'
-    f'<stop offset="1" stop-color="{ICE}"/>'
-)
+GRAD = ((0, BLUE), (.55, CYAN), (1, ICE))
+GRAD_STOPS = "".join(f'<stop offset="{o:g}" stop-color="{c}"/>' for o, c in GRAD)
+
+
+def mix(c1, c2, t):
+    a = [int(c1[i:i + 2], 16) for i in (1, 3, 5)]
+    b = [int(c2[i:i + 2], 16) for i in (1, 3, 5)]
+    return "#" + "".join(f"{round(x + (y - x) * t):02X}" for x, y in zip(a, b))
+
+
+def grad_at(t, stops=GRAD):
+    """Colour of a gradient at offset t (0..1)."""
+    for (o1, c1), (o2, c2) in zip(stops, stops[1:]):
+        if t <= o2:
+            return mix(c1, c2, max(0.0, (t - o1) / (o2 - o1)))
+    return stops[-1][1]
+
+
+def letters(text, colour_of):
+    """Text as one <tspan> per character, coloured by colour_of(index, count).
+
+    WebKit (Safari, GitHub's mobile app) paints gradient-filled text at low resolution,
+    so small gradient text is coloured letter by letter instead and stays sharp.
+    """
+    return "".join(f'<tspan fill="{colour_of(i, len(text))}">{esc(ch)}</tspan>' for i, ch in enumerate(text))
 
 BASE_CSS = """
 .au1{animation:au1 18s ease-in-out infinite alternate}
@@ -59,39 +79,95 @@ text{{font-family:{SANS};font-variant-ligatures:none;font-feature-settings:"liga
 """
 
 
+def _aurora(i, width, height, cx, cy, r, colour, opacity):
+    """A drifting radial glow. Its rect is trimmed to where the gradient is visible, so the
+    browser shades a fraction of the pixels on every frame; the picture is unchanged."""
+    X, Y, W, H = -120, -80, width + 240, height + 160  # the area the glow was designed on
+    gx, gy, rx, ry = X + cx * W, Y + cy * H, r * W, r * H
+    k = ry / rx  # the gradient is an ellipse stretched with that area
+    x0, x1 = max(X, gx - rx), min(X + W, gx + rx)
+    y0, y1 = max(Y, gy - ry), min(Y + H, gy + ry)
+    grad = (f'<radialGradient id="au{i}" gradientUnits="userSpaceOnUse" cx="{gx:g}" cy="{gy:g}" r="{rx:g}" '
+            f'gradientTransform="translate(0 {gy * (1 - k):.2f}) scale(1 {k:.5f})"><stop offset="0" stop-color="{colour}" '
+            f'stop-opacity="{opacity}"/><stop offset="1" stop-color="{colour}" stop-opacity="0"/></radialGradient>')
+    rect = f'<rect class="au{i}" x="{x0:g}" y="{y0:g}" width="{x1 - x0:g}" height="{y1 - y0:g}" fill="url(#au{i})"/>'
+    return grad, rect
+
+
 def backdrop(width, height, rx=16):
     """Deep navy fill with two slowly drifting aurora glows and a faint dot grid."""
+    g1, r1 = _aurora(1, width, height, .2, 0, .6, BLUE, ".26")
+    g2, r2 = _aurora(2, width, height, .9, 1, .55, CYAN, ".13")
+    # Dot grid as dashed lines with round caps (zero-length dashes): the same dots as a <pattern>,
+    # which browsers re-render on every animation frame.
+    rows = "".join(f"M1,{y}H{width}" for y in range(1, height + 1, 22))
     return f"""<defs>
   <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">{GRAD_STOPS}</linearGradient>
-  <radialGradient id="au1" cx=".2" cy="0" r=".6"><stop offset="0" stop-color="{BLUE}" stop-opacity=".26"/><stop offset="1" stop-color="{BLUE}" stop-opacity="0"/></radialGradient>
-  <radialGradient id="au2" cx=".9" cy="1" r=".55"><stop offset="0" stop-color="{CYAN}" stop-opacity=".13"/><stop offset="1" stop-color="{CYAN}" stop-opacity="0"/></radialGradient>
+  {g1}
+  {g2}
   <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset=".45" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="{CYAN}" stop-opacity=".22"/></linearGradient>
   <linearGradient id="sep" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".2" stop-color="#fff" stop-opacity=".09"/><stop offset=".8" stop-color="#fff" stop-opacity=".09"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-  <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".9" fill="#fff" fill-opacity=".04"/></pattern>
   <clipPath id="frame"><rect width="{width}" height="{height}" rx="{rx}"/></clipPath>
 </defs>
 <g clip-path="url(#frame)">
   <rect width="{width}" height="{height}" fill="{CARD}"/>
-  <rect class="au1" x="-120" y="-80" width="{width + 240}" height="{height + 160}" fill="url(#au1)"/>
-  <rect class="au2" x="-120" y="-80" width="{width + 240}" height="{height + 160}" fill="url(#au2)"/>
-  <rect width="{width}" height="{height}" fill="url(#dots)"/>
+  {r1}
+  {r2}
+  <path d="{rows}" stroke="#fff" stroke-opacity=".04" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="0 22"/>
 </g>
 """
 
 
 def border(width, height, rx=16, dur=11):
-    """Hairline gradient border plus two comets of light circling it."""
+    """Hairline gradient border plus two comets of light circling it.
+
+    The comets run on CSS keyframes: browsers tick CSS far more cheaply than SMIL <animate>.
+    """
     x, w, h, r = 0.75, width - 1.5, height - 1.5, rx - 0.75
     perimeter = 2 * (w + h) - (8 - 2 * math.pi) * r
+    tail = 240
+    segments = ((tail, 5, .08), (130, 2.4, .32), (46, 1.5, .95))
     out = [f'<rect x="{x}" y="{x}" width="{w}" height="{h}" rx="{r}" fill="none" stroke="url(#edge)" stroke-width="1.2"/>']
     for colour, delay in ((CYAN, 0), (BLUE, dur / 2)):
-        tail = 240
-        for length, sw, op in ((tail, 5, .08), (130, 2.4, .32), (46, 1.5, .95)):
-            start = perimeter + length - tail
+        for length, sw, op in segments:
             out.append(f'<rect x="{x}" y="{x}" width="{w}" height="{h}" rx="{r}" fill="none" stroke="{colour}" stroke-width="{sw}" '
-                       f'stroke-opacity="{op}" stroke-linecap="round" stroke-dasharray="{length} {perimeter - length:.1f}" stroke-dashoffset="{start:.1f}">'
-                       f'<animate attributeName="stroke-dashoffset" from="{start:.1f}" to="{length - tail:.1f}" dur="{dur}s" begin="-{delay}s" repeatCount="indefinite"/></rect>')
+                       f'stroke-opacity="{op}" stroke-linecap="round" stroke-dasharray="{length} {perimeter - length:.1f}" '
+                       f'stroke-dashoffset="{perimeter + length - tail:.1f}" style="animation:bd{length} {dur}s linear -{delay:g}s infinite"/>')
+    out.append("<style>" + "".join(
+        f"@keyframes bd{length}{{from{{stroke-dashoffset:{perimeter + length - tail:.1f}px}}to{{stroke-dashoffset:{length - tail}px}}}}"
+        for length, _, _ in segments) + "</style>")
     return "\n".join(out)
+
+
+def _blurred_disc(r, sd, rho):
+    """Alpha of a solid disc of radius r after a Gaussian blur of sd, at distance rho from its centre."""
+    if sd <= 0:
+        return 1.0 if rho <= r else 0.0
+    # Integrate the 2D Gaussian over the disc in polar coordinates (cheap and accurate enough).
+    n_r, n_t, total = 40, 72, 0.0
+    for i in range(n_r):
+        s = r * (i + .5) / n_r
+        for j in range(n_t):
+            t = 2 * math.pi * (j + .5) / n_t
+            d2 = (s * math.cos(t) - rho) ** 2 + (s * math.sin(t)) ** 2
+            total += math.exp(-d2 / (2 * sd * sd)) * s
+    return total * (r / n_r) * (2 * math.pi / n_t) / (2 * math.pi * sd * sd)
+
+
+_HALOS = {}
+
+
+def halo_gradient(gid, colour, r, sd, reach):
+    """A radial gradient that paints what feGaussianBlur(sd) does to a disc of radius r.
+
+    Drawing a soft circle is nearly free, while a blur filter is re-run on every animation frame.
+    reach is how far the original filter region let the glow spread.
+    """
+    key = (r, sd, reach)
+    if key not in _HALOS:
+        _HALOS[key] = [(k / 12, _blurred_disc(r, sd, reach * k / 12)) for k in range(13)]
+    stops = "".join(f'<stop offset="{o:.3f}" stop-color="{colour}" stop-opacity="{a:.3f}"/>' for o, a in _HALOS[key])
+    return f'<radialGradient id="{gid}">{stops}</radialGradient>'
 
 
 def card(width, height, index, label, note=""):

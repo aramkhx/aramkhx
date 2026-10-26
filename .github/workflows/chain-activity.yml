@@ -24,6 +24,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Bakes the tower glow and outlines the big total so every browser draws them sharp and cheap
+      # (optional: the script falls back to a live blur and live text without them).
+      - name: Install image tools
+        run: pip install pillow numpy fonttools uharfbuzz
+        continue-on-error: true
+
       - name: Render assets/chain-activity.svg
         run: python3 scripts/chain_activity.py
         env:

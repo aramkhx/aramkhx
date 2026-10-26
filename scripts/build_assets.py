@@ -2,6 +2,7 @@
 """Build the static profile SVGs in assets/ (hero, genesis block, buttons, footer).
 
 Edit the data below, then run:  python3 scripts/build_assets.py
+(needs: pip install pillow numpy fonttools uharfbuzz)
 assets/chain-activity.svg is rendered separately by chain_activity.py (daily workflow).
 """
 
@@ -10,10 +11,14 @@ import math
 import random
 from pathlib import Path
 
-from theme import (BLUE, CARD, CYAN, DIM, GOLD, ICE, INK, MUTED, PANEL, SANS, SKY,
-                   backdrop, border, card, esc, glass, icon, pts, svg)
+import bake
+from theme import (BLUE, CARD, CYAN, DIM, GOLD, GRAD_STOPS, ICE, INK, MUTED, PANEL, SANS, SKY,
+                   backdrop, border, card, esc, glass, grad_at, halo_gradient, icon, letters, mix, pts, svg)
 
 ASSETS = Path(__file__).resolve().parent.parent / "assets"
+# The hero name is drawn as outlines of this font (Inter Display, SIL Open Font License: fonts/OFL.txt).
+# It holds Latin letters, digits and punctuation only.
+NAME_FONT = Path(__file__).resolve().parent / "fonts" / "InterDisplay-ExtraBold-latin.ttf"
 
 # Most monospace fonts lack U+2713, so draw the tick from the sans stack.
 CHECK = f'<tspan font-family="{SANS}">✓</tspan>'
@@ -61,12 +66,6 @@ BUTTONS = [
     ("btn-linkedin", "LinkedIn", CYAN, "in"),
     ("btn-mail", "Email", ICE, "mail"),
 ]
-
-
-def mix(c1, c2, t):
-    a = [int(c1[i:i + 2], 16) for i in (1, 3, 5)]
-    b = [int(c2[i:i + 2], 16) for i in (1, 3, 5)]
-    return "#" + "".join(f"{round(x + (y - x) * t):02X}" for x, y in zip(a, b))
 
 
 def hexagon(cx, cy, r):
@@ -140,17 +139,20 @@ def crystal(cx, cy, R, frames=48, dur=18, direction=1, top=("#0B2C73", "#D4F7FF"
     def anim(attr, values):
         return f'<animate attributeName="{attr}" dur="{dur}s" repeatCount="indefinite" values="{";".join(map(str, values))}"/>'
 
-    back = [f'<polygon points="{points[i][0]}" opacity="{1 - shown[i][0]}" fill="#0A1C40" fill-opacity=".35" '
-            f'stroke="{ICE}" stroke-opacity=".25" stroke-linejoin="round">'
-            f'{anim("points", points[i])}{anim("opacity", [1 - s for s in shown[i]])}</polygon>'
+    # Each facet's shape is animated once and drawn twice through <use>: the back copy shows
+    # while the facet faces away, the front copy (lit, glassy) while it faces the viewer.
+    uid = f"f{R}"
+    shapes = "".join(f'<polygon id="{uid}_{i}" points="{points[i][0]}">{anim("points", points[i])}</polygon>' for i in range(len(faces)))
+    back = [f'<use href="#{uid}_{i}" opacity="{1 - shown[i][0]}" fill="#0A1C40" fill-opacity=".35" '
+            f'stroke="{ICE}" stroke-opacity=".25" stroke-linejoin="round">{anim("opacity", [1 - s for s in shown[i]])}</use>'
             for i in range(len(faces))]
-    front = [f'<polygon points="{points[i][0]}" opacity="{shown[i][0]}" fill="{fills[i][0]}" fill-opacity="{glass_opacity}" '
+    front = [f'<use href="#{uid}_{i}" opacity="{shown[i][0]}" fill="{fills[i][0]}" fill-opacity="{glass_opacity}" '
              f'stroke="#DDF8FF" stroke-opacity="{edge}" stroke-width="1.1" stroke-linejoin="round">'
-             f'{anim("points", points[i])}{anim("opacity", shown[i])}{anim("fill", fills[i])}</polygon>'
+             f'{anim("opacity", shown[i])}{anim("fill", fills[i])}</use>'
              for i in range(len(faces))]
     core = (f'<ellipse class="core" cx="{cx}" cy="{cy + 8}" rx="{R * .75:.0f}" ry="{R * 1.1:.0f}" '
             f'fill="url(#coreG)"/>')
-    return "\n".join(back), core, "\n".join(front)
+    return f"<defs>{shapes}</defs>" + "\n".join(back), core, "\n".join(front)
 
 
 def orbit(cx, cy, rx, ry, angle, colour, dur, delay=0):
@@ -161,9 +163,9 @@ def orbit(cx, cy, rx, ry, angle, colour, dur, delay=0):
 
     def rider(path, show_first):
         kp, vis = ("0;1;1", "1;0") if show_first else ("0;0;1", "0;1")
-        return (f'<circle r="3.6" fill="{colour}" filter="url(#glow)">'
-                f'<animateMotion dur="{dur}s" begin="-{delay}s" repeatCount="indefinite" path="{path}" keyPoints="{kp}" keyTimes="0;.5;1" calcMode="linear"/>'
-                f'<animate attributeName="opacity" dur="{dur}s" begin="-{delay}s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;.5" values="{vis}"/></circle>')
+        return (f'<g><animateMotion dur="{dur}s" begin="-{delay}s" repeatCount="indefinite" path="{path}" keyPoints="{kp}" keyTimes="0;.5;1" calcMode="linear"/>'
+                f'<animate attributeName="opacity" dur="{dur}s" begin="-{delay}s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;.5" values="{vis}"/>'
+                f'<circle r="7.2" fill="url(#halo{colour[1:]})"/><circle r="3.6" fill="{colour}"/></g>')
 
     behind = (f'<g {rot}><path d="{far}" fill="none" stroke="url(#grad)" stroke-opacity=".3" stroke-width="1.2" stroke-dasharray="2 6"/>'
               f'{rider(far, False)}</g>')
@@ -234,12 +236,24 @@ def hero():
                                          bottom=("#1E5FD8", "#BFF3FF"), glass_opacity=.9, edge=.9)
     orbit_a = orbit(cx, cy + 18, 168, 36, -9, CYAN, 9)
     orbit_b = orbit(cx, cy + 18, 130, 26, 14, ICE, 7, delay=2)
+    star_cv = bake.Canvas(cx - 30, round(tip, 1) - 30, 60, 60, 2)
+    star_cv.paint(lambda d, tf, s: d.polygon([tf(*p) for p in bake.flatten(star4(cx, round(tip, 1), 15).replace("Z", ""))], fill=255), "#FFFFFF")
+    glint_glow = star_cv.blur(3).image()
+    curtain_paths = [("M-80,70 C140,10 300,120 520,60 S860,20 1080,80 L1080,128 C860,80 700,170 520,118 S140,80 -80,140 Z", BLUE, .4),
+                     ("M-80,124 C200,64 380,172 600,112 S900,92 1080,142 L1080,176 C880,142 640,212 460,162 S160,132 -80,182 Z", CYAN, .2)]
+    veil_cv = bake.Canvas(*bake.region(bake.bbox([p for d, _, _ in curtain_paths for p in bake.flatten(d)]), -.1, -.6, 1.2, 2.2), .25)
+    for d, colour, op in curtain_paths:
+        veil_cv.polygon(bake.flatten(d), colour, op)
+    veil = veil_cv.blur(20).image()
+    # The name is vector outlines, not live text: every device draws the same letters, and
+    # WebKit (Safari, GitHub's mobile app) no longer cuts off text squeezed with textLength.
+    name_d, name_contours, _ = bake.text_outline(NAME, str(NAME_FONT), 58, 56, name_y, name_w, letter_spacing=1)
+    name_box = (56, name_y - .97 * 58, name_w, 1.21 * 58)  # the text box its glow was designed on
+    name_glow = bake.shapes_glow(name_contours, name_box, BLUE, 14, .5, (-.2, -.6, 1.4, 2.2)).image(opacity=.55)
     sparkles = "".join(f'<path class="twinkle" style="animation-delay:{d}s" d="{star4(x, y, s)}" fill="{ICE}"/>' for x, y, s, d in
                        [(688, 78, 7, 0), (908, 100, 5, 1.1), (938, 232, 6, 2.3), (648, 212, 4.5, 3.1), (852, 52, 4, 1.7)])
     bars = "".join(f'<rect class="bar" x="{164 + i * 5}" y="{99 - h}" width="3" height="{h}" rx="1" fill="{CYAN}" style="animation-delay:{i * .2:.1f}s"/>'
                    for i, h in enumerate((5, 8, 11)))
-    name = (f'x="56" y="{name_y}" font-size="58" font-weight="800" letter-spacing="1" textLength="{name_w}" '
-            f'lengthAdjust="spacingAndGlyphs"')
 
     css = f"""
 .float{{animation:float 6s ease-in-out infinite}}
@@ -276,6 +290,10 @@ def hero():
 .up{{animation:up 1s ease-out both}}
 @keyframes up{{from{{opacity:0;transform:translateY(10px)}}to{{opacity:1;transform:none}}}}
 .gloss{{animation:gloss 12s ease-in-out 3s infinite}}
+.blink{{animation:blink 1s steps(1) infinite}}
+@keyframes blink{{50%{{opacity:0}}}}
+.dot{{animation:dot 3.2s linear infinite}}
+@keyframes dot{{0%{{transform:translate(58px,{name_y + 28}px);opacity:0}}10%,90%{{opacity:1}}100%{{transform:translate(300px,{name_y + 28}px);opacity:0}}}}
 @keyframes gloss{{0%,72%{{transform:translateX(0) skewX(-24deg)}}100%{{transform:translateX(1750px) skewX(-24deg)}}}}
 """
 
@@ -297,20 +315,20 @@ def hero():
   <linearGradient id="fadeDown" gradientUnits="userSpaceOnUse" x1="0" y1="{floor}" x2="0" y2="{floor + 80}"><stop offset="0" stop-color="#fff" stop-opacity=".4"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
   <mask id="reflect" maskUnits="userSpaceOnUse" x="560" y="{floor}" width="440" height="{H - floor}"><rect x="560" y="{floor}" width="440" height="{H - floor}" fill="url(#fadeDown)"/></mask>
   <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-  <filter id="bloom" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="14"/></filter>
-  <filter id="veil" x="-10%" y="-60%" width="120%" height="220%"><feGaussianBlur stdDeviation="20"/></filter>
+  {halo_gradient("halo" + CYAN[1:], CYAN, 3.6, 3, 7.2)}
+  {halo_gradient("halo" + ICE[1:], ICE, 3.6, 3, 7.2)}
+  {halo_gradient("haloFFF", "#FFFFFF", 2.6, 3, 5.2)}
+  <path id="nameP" d="{name_d}"/>
+  <linearGradient id="nameG" gradientUnits="userSpaceOnUse" x1="56" y1="0" x2="{56 + name_w}" y2="0">{GRAD_STOPS}</linearGradient>
   <clipPath id="nameClip"><rect x="40" y="{name_y - 76}" height="100" width="{name_w + 40}">{reveal("width", 0, name_w + 40, 1.8)}</rect></clipPath>
   <clipPath id="type"><rect x="{x0 - 2}" y="{ty - 22}" height="30" width="{n * cw:g}"><animate attributeName="width" {typing} values="{widths}"/></rect></clipPath>
 </defs>
 <g clip-path="url(#frame)">
-  <g class="curtain" filter="url(#veil)" opacity=".6">
-    <path d="M-80,70 C140,10 300,120 520,60 S860,20 1080,80 L1080,128 C860,80 700,170 520,118 S140,80 -80,140 Z" fill="{BLUE}" fill-opacity=".4"/>
-    <path d="M-80,124 C200,64 380,172 600,112 S900,92 1080,142 L1080,176 C880,142 640,212 460,162 S160,132 -80,182 Z" fill="{CYAN}" fill-opacity=".2"/>
-  </g>
+  <g class="curtain" opacity=".6">{veil}</g>
   {"".join(stars)}
   {meteors}
   <g class="rays" fill="url(#rayG)">{"".join(rays)}</g>
-  <rect width="{W}" height="{H}" fill="url(#halo)"/>
+  <rect x="{max(0, cx - 230)}" y="{max(0, cy - 230)}" width="{min(W, cx + 230) - max(0, cx - 230)}" height="{min(H, cy + 230) - max(0, cy - 230)}" fill="url(#halo)"/>
   <polygon class="column" points="{pts((cx - 34, floor), (cx + 34, floor), (cx + 9, 30), (cx - 9, 30))}" fill="url(#columnG)"/>
   {pedestal}
   <rect x="600" y="{floor}" width="390" height="1" fill="url(#horizon)"/>
@@ -328,7 +346,7 @@ def hero():
     {orbit_a[1]}
     {orbit_b[1]}
     <ellipse class="flare" cx="{cx}" cy="{tip:.1f}" rx="36" ry="1.3" fill="{ICE}"/>
-    <path class="glint" d="{star4(cx, round(tip, 1), 15)}" fill="#fff" filter="url(#glow)"/>
+    <g class="glint">{glint_glow}<path d="{star4(cx, round(tip, 1), 15)}" fill="#fff"/></g>
   </g>
   <g mask="url(#reflect)"><use href="#gem" xlink:href="#gem" transform="translate(0 {2 * floor}) scale(1 -1)"/></g>
   {sparkles}
@@ -341,24 +359,23 @@ def hero():
   </g>
 
   <g clip-path="url(#nameClip)">
-    <text {name} fill="{BLUE}" opacity=".55" filter="url(#bloom)">{NAME}</text>
-    <text {name} fill="url(#grad)">{NAME}</text>
-    <text {name} fill="url(#shineG)">{NAME}</text>
+    {name_glow}
+    <use href="#nameP" fill="url(#nameG)"/>
+    <use href="#nameP" fill="url(#shineG)"/>
   </g>
   <rect x="40" y="{name_y - 62}" width="3" height="76" rx="1.5" fill="#fff" opacity="0" filter="url(#glow)">
     {reveal("x", 40, name_w + 80, 1.8)}
     <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.2;.26;.9;1" dur="1.8s" fill="freeze"/>
+    <set attributeName="visibility" to="hidden" begin="1.8s" fill="freeze"/>
   </rect>
 
   <rect class="grow" x="58" y="{name_y + 27}" width="242" height="2" rx="1" fill="url(#grad)"/>
-  <circle r="2.6" fill="#fff" filter="url(#glow)"><animateMotion dur="3.2s" repeatCount="indefinite" path="M58,{name_y + 28} H300"/>
-    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.1;.9;1" dur="3.2s" repeatCount="indefinite"/></circle>
+  <g class="dot" opacity="0"><circle r="5.2" fill="url(#haloFFF)"/><circle r="2.6" fill="#fff"/></g>
 
   <text x="56" y="{ty}" class="m" font-size="20" font-weight="700" fill="{CYAN}">$</text>
   <text clip-path="url(#type)" x="{x0}" y="{ty}" class="m" font-size="20" fill="{INK}" textLength="{n * cw:g}">{esc(ROLE)}</text>
-  <rect x="{x0 + n * cw:g}" y="{ty - 18}" width="11" height="22" fill="{CYAN}" opacity=".85">
+  <rect class="blink" x="{x0 + n * cw:g}" y="{ty - 18}" width="11" height="22" fill="{CYAN}" opacity=".85">
     <animate attributeName="x" {typing} values="{xs}"/>
-    <animate attributeName="opacity" values=".85;0" dur="1s" repeatCount="indefinite" calcMode="discrete"/>
   </rect>
 
   <rect class="gloss" x="-420" y="-60" width="280" height="{H + 120}" fill="url(#glossG)" transform="skewX(-24)"/>
@@ -373,8 +390,11 @@ def blockie(seed, x, y, size=48, cells=8):
     digest = hashlib.sha256(seed.encode()).digest()
     palette = [PANEL] * 4 + [BLUE] * 3 + [CYAN] * 2 + [ICE]
     cell = size / cells
+    gx, gy, gs = x - 4, y - 4, size + 8
+    glow = bake.Canvas(*bake.region((gx, gy, gs, gs), -.5, -.5, 2, 2), 1)
+    glow.paint(lambda d, tf, s: d.rounded_rectangle([tf(gx, gy), tf(gx + gs, gy + gs)], radius=14 * s, fill=255), CYAN)
     out = [f'<clipPath id="blk"><rect x="{x}" y="{y}" width="{size}" height="{size}" rx="11"/></clipPath>',
-           f'<rect x="{x - 4}" y="{y - 4}" width="{size + 8}" height="{size + 8}" rx="14" fill="{CYAN}" opacity=".35" filter="url(#soft)"/>',
+           glow.blur(8).image(opacity=.35),
            f'<g clip-path="url(#blk)">']
     for row in range(cells):
         for col in range(cells // 2):
@@ -387,6 +407,29 @@ def blockie(seed, x, y, size=48, cells=8):
     out.append(f'<circle cx="{x + size - 2}" cy="{y + size - 2}" r="8" fill="{CARD}"/><circle cx="{x + size - 2}" cy="{y + size - 2}" r="6.2" fill="{CYAN}"/>'
                f'<path d="M{x + size - 5},{y + size - 2} L{x + size - 3},{y + size} L{x + size + 1},{y + size - 4.5}" fill="none" stroke="{CARD}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>')
     return "\n".join(out)
+
+
+def shine_letters(text, x0, advance, band=160, start=100, end=540, sweep=2.4, period=4.0):
+    """A highlight sweeping across text, as one colour animation per letter: (tspans, style).
+
+    It replays a white band (`band` wide) gliding from x=start to x=end in `sweep` seconds,
+    then resting until the period ends. Animating each letter's own colour keeps the text sharp
+    in WebKit, which blurs gradient-filled text.
+    """
+    speed = (end - start) / sweep
+    rules, spans = [], []
+    for i, ch in enumerate(text):
+        x = x0 + (i + .5) * advance
+
+        def colour(t):
+            u = (x - (start + speed * min(t, sweep))) / band  # where the letter sits in the band
+            return mix(MUTED, "#FFFFFF", max(0.0, 1 - abs(2 * u - 1)) if 0 <= u <= 1 else 0.0)
+
+        times = {0.0, sweep, period} | {(x - k - start) / speed for k in (band, band / 2, 0) if 0 < (x - k - start) / speed < sweep}
+        frames = "".join(f"{100 * t / period:.2f}%{{fill:{colour(t)}}}" for t in sorted(times))
+        rules.append(f"@keyframes sh{i}{{{frames}}}")
+        spans.append(f'<tspan style="animation:sh{i} {period:g}s linear infinite">{esc(ch)}</tspan>')
+    return "".join(spans), "<style>" + "".join(rules) + "</style>"
 
 
 def genesis():
@@ -405,16 +448,11 @@ def genesis():
 """
     out = [card(W, H, "01", "GENESIS BLOCK", "aramscan · personal block explorer")]
     out.append(f"""<defs>
-  <linearGradient id="shine" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="160" y2="0">
-    <stop offset="0" stop-color="{MUTED}"/><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="{MUTED}"/>
-    <animateTransform attributeName="gradientTransform" type="translate" values="100;540;540" keyTimes="0;.6;1" dur="4s" repeatCount="indefinite"/>
-  </linearGradient>
   <linearGradient id="spine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{CYAN}" stop-opacity=".7"/><stop offset="1" stop-color="{BLUE}" stop-opacity=".1"/></linearGradient>
   <linearGradient id="holoG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
   <linearGradient id="sweepG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{ICE}" stop-opacity="0"/><stop offset=".5" stop-color="{ICE}" stop-opacity=".07"/><stop offset="1" stop-color="{ICE}" stop-opacity="0"/></linearGradient>
   <clipPath id="panels"><rect x="28" y="154" width="462" height="360" rx="12"/><rect x="510" y="154" width="462" height="360" rx="12"/></clipPath>
-  <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="8"/></filter>
+  {halo_gradient("haloSpine", ICE, 3, 2.5, 9)}
 </defs>
 {blockie(ENS, 28, 80)}
 <text x="92" y="101" font-size="15" fill="{MUTED}">Block</text>
@@ -445,7 +483,8 @@ def genesis():
             out.append(f'<rect x="196" y="{y - 9}" width="140" height="8" rx="4" fill="url(#grad)">{reveal("width", 0, 140, 2.6, lead=.15)}</rect>')
             out.append(f'<text x="346" y="{y}" class="m" font-size="13" fill="{INK}">∞ coffee <tspan fill="{DIM}">(100%)</tspan></text>')
         elif colour is None:
-            out.append(f'<text x="196" y="{y}" class="m" font-size="13" fill="url(#shine)">{esc(value)}</text>')
+            spans, style = shine_letters(value, 196, 13 * .6)
+            out.append(f'<text x="196" y="{y}" class="m" font-size="13" fill="{MUTED}">{spans}</text>{style}')
         else:
             out.append(f'<text x="196" y="{y}" font-size="14.5" fill="{colour}">{esc(value)}'
                        + (f'<tspan class="m" font-size="11" fill="{DIM}" dx="10">{esc(note)}</tspan>' if note else "")
@@ -461,7 +500,8 @@ def genesis():
     y0, step, sx, period = 200, 50, 541, 3.6
     top, bottom = y0 + 14, y0 + (len(TXS) - 1) * step + 14
     out.append(f'<rect x="{sx - 1}" y="{top}" width="2" height="{bottom - top}" rx="1" fill="url(#spine)"/>')
-    out.append(f'<circle r="3" fill="{ICE}" filter="url(#glow)"><animateMotion dur="{period}s" repeatCount="indefinite" path="M{sx},{top} V{bottom}"/></circle>')
+    out.append(f'<style>.rider{{animation:rider {period}s linear infinite}}@keyframes rider{{from{{transform:translate({sx}px,{top}px)}}to{{transform:translate({sx}px,{bottom}px)}}}}</style>'
+               f'<g class="rider"><circle r="9" fill="url(#haloSpine)"/><circle r="3" fill="{ICE}"/></g>')
     for i, (method, colour, desc) in enumerate(TXS):
         y = y0 + i * step
         chip = len(method) * 7.2 + 16
@@ -536,15 +576,25 @@ def footer():
   <linearGradient id="hairR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{ICE}" stop-opacity=".8"/><stop offset="1" stop-color="{ICE}" stop-opacity="0"/></linearGradient>
   <linearGradient id="edgesFade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000"/><stop offset=".25" stop-color="#fff"/><stop offset=".75" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
   <mask id="fade" maskUnits="userSpaceOnUse" x="0" y="0" width="{W}" height="{H}"><rect width="{W}" height="{H}" fill="url(#edgesFade)"/></mask>
-  <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  {halo_gradient("haloDot", "#FFFFFF", 3.2, 3, 9.6)}
 </defs>
 <g mask="url(#fade)">""" + "".join(
         f'<path class="w{i}" d="{wave(ly, amp, lam, W + lam)}" fill="none" stroke="{colour}" stroke-opacity="{op}" stroke-width="1.2"/>'
         for i, (amp, lam, colour, op, _) in enumerate(waves)) + f"""</g>
 <rect x="{x_start}" y="{ly - 3}" width="{x_end - x_start}" height="6" fill="url(#line)" opacity=".12"/>
 <rect x="{x_start}" y="{ly - .7}" width="{x_end - x_start}" height="1.4" fill="url(#line)"/>"""]
+    out.append(f'<style>.ride{{animation:ride {period}s linear infinite}}@keyframes ride{{from{{transform:translate({x_start}px,{ly}px)}}to{{transform:translate({x_end}px,{ly}px)}}}}</style>')
     for i in range(2):
-        out.append(f'<circle r="3.2" fill="#fff" filter="url(#glow)"><animateMotion dur="{period}s" begin="-{i * period / 2}s" repeatCount="indefinite" path="M{x_start},{ly} H{x_end}"/></circle>')
+        out.append(f'<g class="ride" style="animation-delay:-{i * period / 2:g}s"><circle r="9.6" fill="url(#haloDot)"/><circle r="3.2" fill="#fff"/></g>')
+    tick = [(490, ly + 1), (497, ly + 8), (511, ly - 7)]
+    tick_glow = bake.Canvas(*bake.region(bake.bbox(tick), -1, -1, 3, 3), 2)
+
+    def draw_tick(d, tf, s):
+        d.line([tf(*p) for p in tick], fill=255, width=round(2.6 * s), joint="curve")
+        for px, py in (tf(*tick[0]), tf(*tick[-1])):
+            d.ellipse([px - 1.3 * s, py - 1.3 * s, px + 1.3 * s, py + 1.3 * s], fill=255)
+    tick_glow.paint(draw_tick, ICE)
+    tick_glow.blur(3)
     nodes = [130 + k * 92.5 for k in range(9)]
     for k, x in enumerate(nodes):
         if k == 4:
@@ -556,10 +606,12 @@ def footer():
                    f'<circle cx="{x}" cy="{ly}" r="2.6" fill="{colour}"/></g>')
     out.append(f'<polygon class="halo" points="{hexagon(500, ly, 24)}" fill="none" stroke="{ICE}" stroke-width="1.2"/>'
                f'<polygon points="{hexagon(500, ly, 22)}" fill="{PANEL}" stroke="url(#hub)" stroke-width="2"/>'
-               f'<path d="M490,{ly + 1} L497,{ly + 8} L511,{ly - 7}" fill="none" stroke="{ICE}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>')
+               + tick_glow.image() +
+               f'<path d="M490,{ly + 1} L497,{ly + 8} L511,{ly - 7}" fill="none" stroke="{ICE}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>')
     out.append(f'<text x="{W / 2}" y="122" class="m" font-size="15" text-anchor="middle" fill="{INK}">visit confirmed · thanks for validating this block</text>')
     # Signature tagline in the shared gradient, framed by two hairlines that fade outwards.
-    out.append(f'<text x="{W / 2 + 2}" y="148" class="m" font-size="12.5" font-weight="600" letter-spacing="4" text-anchor="middle" fill="url(#grad)">DON\'T TRUST. VERIFY.</text>')
+    out.append(f'<text x="{W / 2 + 2}" y="148" class="m" font-size="12.5" font-weight="600" letter-spacing="4" text-anchor="middle">'
+               + letters("DON'T TRUST. VERIFY.", lambda i, n: grad_at((i + .5) / n)) + '</text>')
     out.append(f'<rect x="{W / 2 - 240}" y="143.5" width="100" height="1" fill="url(#hairL)"/>'
                f'<rect x="{W / 2 + 140}" y="143.5" width="100" height="1" fill="url(#hairR)"/>')
     out.append(border(W, H, dur=10))
